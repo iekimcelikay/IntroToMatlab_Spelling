@@ -1,3 +1,4 @@
+function [] = mainmenu(win)
 %% Menu: Study or Exercise? 
 % Welcome to English spelling trainer! Select if you want  to study or do
 % the exercises! 
@@ -33,25 +34,16 @@ y_screen=800;
 size_of_main_window=[0 0 x_screen y_screen];
 bg_colour=[195 68 122];
 
-%size and font of your text
-text_font='Futura';
-text_size=round(x_screen*0.03);
-text_colour=[255 255 255];
-
-%cursor size and colour
-cursor_colour=[0 0 0];
-cursor_size=10;
-my_device_right_click=3; %please set your right click
-
-%setting the screen
-[win, mainScreen]=Screen('OpenWindow', 0, bg_colour, size_of_main_window);
-Screen('TextSize', win, text_size);
-Screen('TextFont', win, text_font);
+KbName('UnifyKeyNames');
+Screen('TextSize', win, 18);
+Screen('TextFont', win, 'Kristen ITC');
 Screen('flip', win);
 
-%Screen center constants
-screenCntrX = mainScreen(3)/2;
-screenCntrY = mainScreen(4)/2;
+x_screen=1280;
+y_screen=800;
+size_of_main_window=[0 0 x_screen y_screen];
+bg_colour=[195 68 122];
+
 
 % set the rectangles on the screen
 rect1 = [0 125 1199 200];
@@ -61,7 +53,7 @@ rect4 = [150 600 450 675];
 rect5 = [750 600 1050 675];
 
 % Buttons 
-box1 = 'Welcome to spelling trainer!';
+box1 = 'Welcome to English spelling trainer! Select the options below:';
 box2 = 'Study';
 box3 = 'Exercise';
 box4 = 'See past scores';
@@ -85,3 +77,4 @@ DrawFormattedText(win, box5, 'center' , 'center',[0 0 0], [], [], [], [], [], re
 Screen(win, 'Flip', [], 1);
 
 
+end
