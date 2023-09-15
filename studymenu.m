@@ -1,87 +1,117 @@
-%% Menu: Study or Exercise? 
-% Welcome to English spelling trainer! Select if you want  to study or do
-% the exercises! 
-% . 
+function [] = studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+% win = which PTB window this will work on
+% x_screen = width of window
+% y_screen = length of window
+% main_filepath = the folder where all the files are.
+% (ıntrotomatlab_spelling)
+% deviceid = you should define your audio player. 1= main speaker 2= cable
+% earphone 3=bluetooth earphone.
 
-%      ____rect1_______________________________________________________________________
-%     |Welcome to English spelling trainer! Select if you wannt to study or practice!  |             
-%     |________________________________________________________________________________|
-%    
-%     _____rect2_____                                   _______rect3_______
-%    |Study          |                                 |Exercise           |
-%    |_______________|                                 |___________________| 
-%
-%     _____rect4_________                               ________rect5_____
-%    |See previous scores|                              |Exit           |
-%    |___________________|                              |______________|
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%SET UP
-Screen('Preference', 'VisualDebugLevel', 0);
-Screen('Preference','SkipSyncTests',1);
-
-%%please set the main directory that includes all files
-main_dir= fullfile("C:\Users\iekim\Documents\College\UniTrento_CimEC\Fall_2022_23\IntroductiontoComputerProgramming_Matlab_FAIRHALL\MATLAB\IntroToMatlab_Spelling\");
-cd(main_dir);
-main_list=dir; %buna ne gerek var? 
-
-
-%%size and background colour of your screen
-x_screen=1200;
-y_screen=800;
-size_of_main_window=[0 0 x_screen y_screen];
-bg_colour=[195 68 122];
-
-%size and font of your text
-text_font='Futura';
-text_size=round(x_screen*0.03);
-text_colour=[255 255 255];
-
-%cursor size and colour
-cursor_colour=[0 0 0];
-cursor_size=10;
-my_device_right_click=3; %please set your right click
-
-%setting the screen
-[win, mainScreen]=Screen('OpenWindow', 0, bg_colour, size_of_main_window);
-Screen('TextSize', win, text_size);
-Screen('TextFont', win, text_font);
+Screen('TextSize', win, 18);
+Screen('TextFont', win, 'Kristen ITC');
 Screen('flip', win);
 
-%Screen center constants
-screenCntrX = mainScreen(3)/2;
-screenCntrY = mainScreen(4)/2;
-
 % set the rectangles on the screen
-rect1 = [0 125 1199 200];
-rect2 = [150 400 450 475];
-rect3= [750 400 1050 475];
-rect4 = [150 600 450 675];
-rect5 = [750 600 1050 675];
+image_rect = [520 100 740 340];
+rect1 = [220 400 420 450];
+rect2 = [220 600 420 650];
+rect3= [860 400 1060 450];
+rect4 = [860 600 1060 650];
 
-% Buttons 
-box1 = 'Welcome to spelling trainer!';
-box2 = 'Study';
-box3 = 'Exercise';
-box4 = 'See past scores';
-box5 = 'Exit';
-
-
-% Draw rectangle frames for buttons with text. 
-Screen('FrameRect', win, [250 250 250], rect1 , [2]);
-Screen('FrameRect', win, [250 250 250], rect2 , [2]);
-Screen('FrameRect', win, [250 250 250], rect3, [2]);
-Screen('FrameRect', win, [250 250 250], rect4 , [2]);
-Screen('FrameRect', win, [250 250 250], rect5 , [2]);
-
-% Write the button names. 
-DrawFormattedText(win, box1, 'center' , 'center',[0 0 0], [], [], [], [], [], rect1);
-DrawFormattedText(win, box2, 'center' , 'center',[0 0 0], [], [], [], [], [], rect2);
-DrawFormattedText(win, box3, 'center' , 'center',[0 0 0], [], [], [], [], [], rect3);
-DrawFormattedText(win, box4, 'center' , 'center',[0 0 0], [], [], [], [], [], rect4);
-DrawFormattedText(win, box5, 'center' , 'center',[0 0 0], [], [], [], [], [], rect5);
-
-Screen(win, 'Flip', [], 1);
+%Buttons for practice
+box1 = 'See the word';
+box2 = 'Listen the word';
+box3 = 'see the spelling';
+box4 = 'listen the spelling';
 
 
+while kk>= 1 && kk<=38
+
+    % Show the main image on the screen.
+    filename=fullfile([images_path, words{kk}, '.jpg']);
+    myImage = imread(filename);
+    tex=Screen('MakeTexture', win, myImage);
+    Screen('DrawTexture', win, tex, [], image_rect);
+
+
+    % Loading the audio for word
+    audio_file = fullfile([words_sound_path, words{kk}, '.wav']);
+    [data, samplingRate]=audioread(audio_file);
+    pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate,1);
+    PsychPortAudio('FillBuffer', pahandle, data');
+
+    % Draw rectangle frames for buttons with text.
+    Screen('FrameRect', win, [250 250 250], rect1 , [2]);
+    Screen('FrameRect', win, [250 250 250], rect2 , [2]);
+    Screen('FrameRect', win, [250 250 250], rect3, [2]);
+    Screen('FrameRect', win, [250 250 250], rect4 , [2]);
+    DrawFormattedText(win, box1, 'center' , 'center',[0 0 0], [], [], [], [], [], rect1);
+    DrawFormattedText(win, box2, 'center' , 'center',[0 0 0], [], [], [], [], [], rect2);
+    DrawFormattedText(win, box3, 'center' , 'center',[0 0 0], [], [], [], [], [], rect3);
+    DrawFormattedText(win, box4, 'center' , 'center',[0 0 0], [], [], [], [], [], rect4);
+
+    Screen(win, 'Flip', [], 1);
+    noClick = true;
+    while noClick
+        [mouseX, mouseY, buttons] = GetMouse;
+
+        if buttons(1) ==1
+            % Button 1: See the word
+            if mouseX > rect1(1) & mouseX<rect1(3) & mouseY>rect1(2) & mouseY<rect1(4)
+                newStr = upper(words{kk});
+                Screen('TextSize', win, 42);
+                DrawFormattedText(win, newStr, 'center' , 'center',[0 0 0], [], [], [], [], [], rect1+[0 50 0 50]);
+                Screen(win, 'Flip', [], 1);
+
+                % Button 2: Listen the word
+            elseif mouseX > rect2(1) & mouseX<rect2(3) & mouseY>rect2(2) & mouseY<rect2(4)
+                pause(0.5); % I put this to prevent crashing
+                PsychPortAudio('Start', pahandle);
+
+                % Button 3: See the spelling
+            elseif  mouseX > rect3(1) & mouseX<rect3(3) & mouseY>rect3(2) & mouseY<rect3(4)
+                newStr = upper(words{kk});
+                Screen('TextSize', win, 42);
+                letters = {};
+                position = rect3 + [0 50 0 50];
+                for l=1:numel(newStr)
+                    letter = newStr(l);
+                    % Append the letter to this array.
+                    letters(l) = {letter};
+                    % Draw the formatted text
+                    Str = [letters{l} , '- '];
+                    DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
+                    % Update the vertical position for the next string
+                    position = position + [50 0 50 0];
+                    Screen(win, 'Flip', [], 1);
+                end
+
+                %Button 4: Listen the spelling
+            elseif mouseX > rect4(1) & mouseX<rect4(3) & mouseY>rect4(2) & mouseY<rect4(4)
+                % Loading the audio for letters (spelling listening)
+                newStr = upper(words{kk});
+                letters = {};
+                for l=1:numel(newStr)
+                    letter = newStr(l);
+                    % Append the letter to this array.
+                    letters(l) = {letter};
+                    letter_audio = fullfile([letters_sound_path, letters{l}, '.wav']);
+                    [data, samplingRate]=audioread(letter_audio);
+                    letters_pahandle{l} = PsychPortAudio('Open', deviceid, [], [], samplingRate,1);
+                    PsychPortAudio('FillBuffer', letters_pahandle{l}, data');
+                    pause(0.5); % I put this to prevent crashing
+                    PsychPortAudio('Start', letters_pahandle{l});
+                end
+
+            end
+
+        end
+        [~, ~, keyCode] = KbCheck;
+        if ~isempty(keyCode)
+            noClick = false;
+        end
+
+    end
+end
