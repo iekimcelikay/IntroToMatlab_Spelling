@@ -40,11 +40,11 @@ KbName('UnifyKeyNames');
 
 %setting the screen
 [win, mainScreen]=Screen('OpenWindow', 0, bg_colour, size_of_main_window);
-mainmenu(win)
+% mainmenu(win)
 
 
-% kk=1;
-%      studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid,kk);
+kk=1;
+     studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid,kk);
 %
 
 

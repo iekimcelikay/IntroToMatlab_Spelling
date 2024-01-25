@@ -51,7 +51,7 @@ if kk>= 1 && kk<=38
           [secs, keyCode] = KbStrokeWait;
             % Check if the 'Escape' key is pressed
             if keyCode(KbName('ESCAPE'))
-                disp('Escape key pressed. Ending the loop.');
+                disp('Escape key pressed. Exiting the screen.');
                 keepRunning = false;  % Set the flag to exit the loop
                 pause(0.5)
                 sca;
@@ -62,7 +62,7 @@ if kk>= 1 && kk<=38
                 continue
             elseif keyCode(KbName('RightArrow'))
                 Screen(win,'flip')
-                kk = kk+1
+                kk = kk+1;
                 continue
             end
         end
