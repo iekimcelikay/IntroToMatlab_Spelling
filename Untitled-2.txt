@@ -1,0 +1,37 @@
+%  Write the word when you see the image.
+% 1. Randomly present the images 
+% 2. Ask input from the user 
+% 3. Show the input on the screen
+% 4. Check if the input is correct
+%. 5. If correct, display 'correct' 
+%. 6. If incorrect, display 'incorrect' and the right word. 
+% 7. Save correct and incorrect responses. 
+% 8. After every image is practiced, give the accuracy results. 
+
+
+% If box3 in mainmenu is clicked - EXERCISE
+%% 1. Randomly present the images
+
+random_numbers = randperm(38);
+kk = 1;
+filename = fullfile([images_path, words{random_numbers(kk)}, '.jpg']);
+myImage = imread(filename);
+tex=Screen('MakeTexture', win, myImage);
+Screen('DrawTexture', win, tex, [], image_rect);
+
+
+% 3. To record and draw the typed word. 
+typedWord = [];
+while true
+    [keyTime, keyCode ] = KbStrokeWait(); % wait for the key press
+    keyPressed = KbName(keyCode); %transform into a character
+    if strcmp(keyPressed, 'return') % if return
+        pause(0.5)
+        sca
+        break
+    else
+        typedWord = [typedWord keyPressed]; %concatenate
+        DrawFormattedText(win, typedWord, 'center', 'center');
+        Screen('flip', win);
+    end
+end

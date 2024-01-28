@@ -36,7 +36,7 @@ bg_colour=[195 68 122];
 
 KbName('UnifyKeyNames');
 Screen('TextSize', win, 18);
-Screen('TextFont', win, 'Kristen ITC');
+Screen('TextFont', win, 'Helvetica');
 Screen('flip', win);
 
 x_screen=1280;

@@ -102,7 +102,7 @@ if kk>= 1 && kk<=38
                     % Loading the audio for word
     audio_file = fullfile([words_sound_path, words{kk}, '.wav']);
     [data, samplingRate]=audioread(audio_file);
-    pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate, 1);
+    pahandle = PsychPortAudio('Open', deviceid, [], [], 48000, 1);
     PsychPortAudio('FillBuffer', pahandle, data');
                 pause(0.5); 
                 PsychPortAudio('Start', pahandle);
