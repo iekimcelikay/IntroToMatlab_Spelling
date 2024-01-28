@@ -37,22 +37,7 @@
 
 
 
-% 3. To record and draw the typed word. 
-%%%
-%typedWord = [];
-%while true
-%    [keyTime, keyCode ] = KbStrokeWait(); % wait for the key press
-%    keyPressed = KbName(keyCode); %transform into a character
-%    if strcmp(keyPressed, 'return') % if return
-%        pause(0.5)
-%        sca
-%        break
-%    else
-%        typedWord = [typedWord keyPressed]; %concatenate
-%        DrawFormattedText(win, typedWord, 'center', 'center');
-%        Screen('flip', win);
-%    end
-%end
+
 %%%%
 clear all;
 close all;
@@ -98,9 +83,9 @@ bg_colour=[195 68 122];
 % 2. Set the rectangles on the screen
 %             left, up, 
 image_rect = [520 100 740 340]; % Main image rectangle. Image to be shown in this. 
-box1 = [520 480 740 660]; % Answer Box 
-box2 = ; % Exit button
-box3 = ; % Return to menu button
+box1 = [420 430 840 510]; % Answer Box 
+%box2 = ; % Exit button
+%box3 = ; % Return to menu button
 
 % 
 
@@ -114,5 +99,58 @@ box3 = ; % Return to menu button
  Screen('DrawTexture', win, tex, [], image_rect);
 
  Screen('FrameRect', win, [250 250 250], box1 , [2]);
-
  Screen(win, 'Flip', [], 1);
+
+ % 3. To record and draw the typed word. 
+%%%
+
+keepRunning=true;
+        % Show the main image on the screen.
+        filename=fullfile([images_path, words{kk}, '.jpg']);
+        myImage = imread(filename);
+        tex=Screen('MakeTexture', win, myImage);
+        Screen('DrawTexture', win, tex, [], image_rect);
+    
+    while keepRunning
+        [keyIsDown, ~, keyCode] = KbCheck;
+        
+        if keyIsDown
+          [secs, keyCode] = KbStrokeWait;
+            % Check if the 'Escape' key is pressed
+            if keyCode(KbName('ESCAPE'))
+                disp('Escape key pressed. Exiting the screen.');
+                keepRunning = false;  % Set the flag to exit the loop
+                pause(0.5)
+                sca;
+                return
+            else 
+                key_pressed = keyCode(KbName());
+                type_name = [];
+                type_name = [type_name key_pressed];
+            end
+        DrawFormattedText(win, type_name, 'center' , 'center',[0 0 0], [], [], [], [], [], box1);
+        Screen(win, 'Flip', [], 1);
+        end
+        
+    end
+
+
+
+
+
+
+
+%typedWord = [];
+%while true
+%    [keyTime, keyCode ] = KbStrokeWait(); % wait for the key press
+%    keyPressed = KbName(keyCode); %transform into a character
+%    if strcmp(keyPressed, 'return') % if return
+%        pause(0.5)
+%        sca
+%        break
+%    else
+%        typedWord = [typedWord keyPressed]; %concatenate
+%        DrawFormattedText(win, typedWord, 'center', 'center');
+%        Screen('flip', win);
+%    end
+%end
