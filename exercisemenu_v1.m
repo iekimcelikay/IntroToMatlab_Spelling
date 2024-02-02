@@ -68,8 +68,8 @@ KbName('UnifyKeyNames');
 %% PAGE DESIGN 
 
 KbName('UnifyKeyNames');
-Screen('TextSize', win, 18);
-Screen('TextFont', win, 'Kristen ITC');
+Screen('TextSize', win, 24);
+Screen('TextFont', win, 'Montserrat');
 Screen('flip', win);
 % 
 
@@ -84,73 +84,61 @@ bg_colour=[195 68 122];
 %             left, up, 
 image_rect = [520 100 740 340]; % Main image rectangle. Image to be shown in this. 
 box1 = [420 430 840 510]; % Answer Box 
+box2 = [420 350 840 400]; %Write the name of the object
 %box2 = ; % Exit button
 %box3 = ; % Return to menu button
 
-% 
+text1 = 'Type the correct vocabulary for this image';
 
  % Show the main image on the screen.
  random_numbers = randperm(38);
  kk =1;
- filename = fullfile([images_path, words{random_numbers(kk)}, '.jpg']);
-
- myImage = imread(filename);
- tex=Screen('MakeTexture', win, myImage);
- Screen('DrawTexture', win, tex, [], image_rect);
-
- Screen('FrameRect', win, [250 250 250], box1 , [2]);
- Screen(win, 'Flip', [], 1);
-
- % 3. To record and draw the typed word. 
-%%%
-
-keepRunning=true;
-        % Show the main image on the screen.
-        filename=fullfile([images_path, words{kk}, '.jpg']);
-        myImage = imread(filename);
-        tex=Screen('MakeTexture', win, myImage);
-        Screen('DrawTexture', win, tex, [], image_rect);
-    
-    while keepRunning
-        [keyIsDown, ~, keyCode] = KbCheck;
-        
-        if keyIsDown
-          [secs, keyCode] = KbStrokeWait;
-            % Check if the 'Escape' key is pressed
-            if keyCode(KbName('ESCAPE'))
-                disp('Escape key pressed. Exiting the screen.');
-                keepRunning = false;  % Set the flag to exit the loop
-                pause(0.5)
-                sca;
-                return
-            else 
-                key_pressed = keyCode(KbName());
-                type_name = [];
-                type_name = [type_name key_pressed];
-            end
-        DrawFormattedText(win, type_name, 'center' , 'center',[0 0 0], [], [], [], [], [], box1);
-        Screen(win, 'Flip', [], 1);
-        end
-        
-    end
+ 
 
 
 
+Screen('flip', win);
 
 
+ListenChar(-1); % Enable or disable key presses in the editor or command window.
+typedWord=[];
+keepRunning = true;
+while keepRunning
 
+    %%% Showing the image on screen
+    filename = fullfile([images_path, words{random_numbers(kk)}, '.jpg']);
+    myImage = imread(filename);
+    tex=Screen('MakeTexture', win, myImage);
+    Screen('DrawTexture', win, tex, [], image_rect);
+    Screen('FrameRect', win, [250 250 250], box1 , [2]);
+    DrawFormattedText(win, text1, 'center' , 'center',[0 0 0], [], [], [], [], [], box2);
+    Screen(win, 'Flip', [], 1);
 
-%typedWord = [];
-%while true
-%    [keyTime, keyCode ] = KbStrokeWait(); % wait for the key press
-%    keyPressed = KbName(keyCode); %transform into a character
-%    if strcmp(keyPressed, 'return') % if return
-%        pause(0.5)
-%        sca
-%        break
-%    else
-%        typedWord = [typedWord keyPressed]; %concatenate
-%        DrawFormattedText(win, typedWord, 'center', 'center');
-%        Screen('flip', win);
-%    end
-%end
+    %%% Collecting the user input 
+    [keyTime, keyCode] = KbStrokeWait;
+    keyPressed = KbName(keyCode);
+    if strcmpi(keyPressed, 'Return')
+        break
+    elseif strcmpi(keyPressed, 'ESCAPE')
+        disp('Escape key pressed. Exiting the screen.');
+        keepRunning = false;  % Set the flag to exit the loop
+        pause(0.5)
+        sca;
+        return
+    else
+        typedWord = [typedWord keyPressed]; % concatenate. You need this variable to check if the word is correctly written. 
+        letters = {};
+        position = box1;
+        for l=1:numel(typedWord)
+            letter = typedWord(l);
+             % Append the letter to this array.
+             letters(l) = {letter};
+             % Draw the formatted text
+             Str = [letters{l}]; % This is if you want  to add something in between
+             DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
+             position = position + [12 0 12 0];
+             Screen(win, 'Flip', [], 1);
+        end  
+    end  
+end
+ListenChar(0);
