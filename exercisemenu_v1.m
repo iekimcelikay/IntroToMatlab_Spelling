@@ -1,3 +1,4 @@
+
 % EXERCISE MENU
 %_--------------
 %---------------------------------------------------------------
@@ -37,7 +38,6 @@
 
 
 
-
 %%%%
 clear all;
 close all;
@@ -48,7 +48,7 @@ letters_sound_path = fullfile('C:\Users\iekim\Documents\College\UniTrento_CimEC\
 words =  {'ant','axe','banana','bat','belt','brush','canary','cape','cat','cherry','dog','dress','duck','eagle','fox','goat','goose','hat','jacket','kiwi','koala','ladder','lemon','lion','mole','peach','pencil','penguin','pig','pumpkin','rabbit','sheep','shirt','skunk','swan','tiger','tomato','zebra'};
 
 my_devices = PsychPortAudio('GetDevices',[],[]);
-deviceid= 3; %please set your speaker. 1 for computer speaker, 2 for cable earphone, 3 for bluetooth earphone
+deviceid= 2; %please set your speaker. 2 for computer if bluetooth is not connected.
 InitializePsychSound(1);
 
 
@@ -56,13 +56,16 @@ Screen('Preference', 'VisualDebugLevel', 0);
 Screen('Preference','SkipSyncTests',1);
 
 
+
+%setting the screen
+
+% 1. Setup the main screen -- this part should be moved to main function later. 
+
 x_screen=1280;
 y_screen=800;
 size_of_main_window=[0 0 x_screen y_screen];
 bg_colour=[195 68 122];
-KbName('UnifyKeyNames');
 
-%setting the screen
 [win, mainScreen]=Screen('OpenWindow', 0, bg_colour, size_of_main_window);
 
 %% PAGE DESIGN 
@@ -73,38 +76,36 @@ Screen('TextFont', win, 'Montserrat');
 Screen('flip', win);
 % 
 
-% 1. Setup the main screen -- this part should be moved to main function later. 
-
-x_screen=1280;
-y_screen=800;
-size_of_main_window=[0 0 x_screen y_screen];
-bg_colour=[195 68 122];
-
 % 2. Set the rectangles on the screen
-%             left, up, 
+%             left, top, right, bottom
 image_rect = [520 100 740 340]; % Main image rectangle. Image to be shown in this. 
 box1 = [420 430 840 510]; % Answer Box 
 box2 = [420 350 840 400]; %Write the name of the object
 %box2 = ; % Exit button
 %box3 = ; % Return to menu button
 
-text1 = 'Type the correct vocabulary for this image';
+vocab_no = 38;
+random_numbers = randperm(vocab_no); %%% For exercise items to be shown randomly. 
+no_of_errors =zeros(vocab_no,1);
 
- % Show the main image on the screen.
- random_numbers = randperm(38);
- kk =1;
+
+kk =1;
+
+%% Text messages:
+text1 = 'Type the correct vocabulary for this image, press enter after your answer. ';
+text2 = 'Correct!';
+  
+
+
  
-
-
-
 Screen('flip', win);
 
 
 ListenChar(-1); % Enable or disable key presses in the editor or command window.
 typedWord=[];
 keepRunning = true;
-while keepRunning
 
+while keepRunning
     %%% Showing the image on screen
     filename = fullfile([images_path, words{random_numbers(kk)}, '.jpg']);
     myImage = imread(filename);
@@ -115,30 +116,64 @@ while keepRunning
     Screen(win, 'Flip', [], 1);
 
     %%% Collecting the user input 
+
+    %%% Check against: (The word that is shown:)
+    correctWord = words{random_numbers(kk)}; 
+
     [keyTime, keyCode] = KbStrokeWait;
     keyPressed = KbName(keyCode);
-    if strcmpi(keyPressed, 'Return')
-        break
-    elseif strcmpi(keyPressed, 'ESCAPE')
+    if strcmpi(keyPressed, 'ESCAPE')
         disp('Escape key pressed. Exiting the screen.');
         keepRunning = false;  % Set the flag to exit the loop
         pause(0.5)
         sca;
         return
     else
-        typedWord = [typedWord keyPressed]; % concatenate. You need this variable to check if the word is correctly written. 
+        typedWord = [typedWord keyPressed]; % concatenate. You need this variable to check if the word is correctly written. Save this variable for user input. 
         letters = {};
-        position = box1;
+        position = box1;    
         for l=1:numel(typedWord)
             letter = typedWord(l);
-             % Append the letter to this array.
-             letters(l) = {letter};
-             % Draw the formatted text
-             Str = [letters{l}]; % This is if you want  to add something in between
-             DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
-             position = position + [12 0 12 0];
-             Screen(win, 'Flip', [], 1);
+            % Append the letter to this array.
+            letters(l) = {letter};
+            % Draw the formatted text
+            Str = [letters{l}]; % This is if you want  to add something in between
+            if ~contains(typedWord, 'Return')
+                DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
+                position = position + [12 0 12 0];
+                Screen(win, 'Flip', [], 1);
+            end
+        end
+        if  strcmpi(keyPressed, 'Return') 
+            rect=[0+round(x_screen*0.34) 0+round(y_screen*0.25) round(x_screen*0.66) round(y_screen*0.75)];  %%% 435, 200, 845, 600
+            typedWord = erase(typedWord, 'Return');
+            if strcmpi(typedWord, correctWord)
+                Screen('FillRect', win, [0 155 119], rect);
+                DrawFormattedText(win, text2, 'center', 'center');
+                Screen('Flip',win);
+                pause(1.5);
+                kk=kk+1;
+                typedWord = [];
+            else             
+                no_of_errors(random_numbers(kk))=no_of_errors(random_numbers(kk))+1;
+                no_of_try = 3 - no_of_errors(random_numbers(kk));
+                text3 = sprintf('You made a mistake.\n\n Trials left: %d', no_of_try); 
+
+                Screen('FillRect', win, [155 35 53], rect);
+                DrawFormattedText(win, text3, 'center', 'center');
+                Screen('Flip',win);
+                pause(1.5);
+                typedWord = [];
+                if no_of_errors(random_numbers(kk)) == 3
+                    kk = kk+1; 
+                end 
+
+            end
         end  
-    end  
-end
+    end
+    if kk == 38
+        keepRunning = false;
+    end
+end  
+
 ListenChar(0);

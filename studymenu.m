@@ -41,11 +41,11 @@ box3 = 'see the spelling';
 box4 = 'listen the spelling';
 
 keepRunning=true;
+noClickYet = true;
 countClick = 0;
 
 if kk>= 1 && kk<=38
     while keepRunning
-
         [keyIsDown, ~, keyCode] = KbCheck;
         if keyIsDown
           [secs, keyCode] = KbStrokeWait;
@@ -66,15 +66,13 @@ if kk>= 1 && kk<=38
                 continue
             end
         end
-        [mouseX, mouseY, buttons] = GetMouse;
+        [mouseX, mouseY, buttons] = GetMouse;  %%% while keepRunning = true this will run. 
 
     % Show the main image on the screen.
     filename=fullfile([images_path, words{kk}, '.jpg']);
     myImage = imread(filename);
     tex=Screen('MakeTexture', win, myImage);
     Screen('DrawTexture', win, tex, [], image_rect);
-
-
 
 
     % Draw rectangle frames for buttons with text.
@@ -97,18 +95,18 @@ if kk>= 1 && kk<=38
                 countClick = countClick + 1;
                     
 
-                % Button 2: Listen the word
+            % Button 2: Listen the word
             elseif mouseX > rect2(1) & mouseX<rect2(3) & mouseY>rect2(2) & mouseY<rect2(4)
-                    % Loading the audio for word
-    audio_file = fullfile([words_sound_path, words{kk}, '.wav']);
-    [data, samplingRate]=audioread(audio_file);
-    pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate, 1);
-    PsychPortAudio('FillBuffer', pahandle, data');
+                % Loading the audio for word
+                audio_file = fullfile([words_sound_path, words{kk}, '.wav']);
+                [data, samplingRate]=audioread(audio_file);
+                pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate, 1);
+                PsychPortAudio('FillBuffer', pahandle, data');
                 pause(0.5); 
                 PsychPortAudio('Start', pahandle);
                 countClick = countClick + 1;
 
-                % Button 3: See the spelling
+            % Button 3: See the spelling
             elseif  mouseX > rect3(1) & mouseX<rect3(3) & mouseY>rect3(2) & mouseY<rect3(4)
                 newStr = upper(words{kk});
                 letters = {};
@@ -126,7 +124,7 @@ if kk>= 1 && kk<=38
                 end
 
 
-                %Button 4: Listen the spelling
+            %Button 4: Listen the spelling
             elseif mouseX > rect4(1) & mouseX<rect4(3) & mouseY>rect4(2) & mouseY<rect4(4)
                 % Loading the audio for letters (spelling listening)
                 newStr = upper(words{kk});
@@ -137,7 +135,7 @@ if kk>= 1 && kk<=38
                     letters(l) = {letter};
                     letter_audio = fullfile([letters_sound_path, letters{l}, '.wav']);
                     [data, samplingRate]=audioread(letter_audio);
-                    letters_pahandle{l} = PsychPortAudio('Open', deviceid, [], [], [], samplingRate,1);
+                    letters_pahandle{l} = PsychPortAudio('Open', deviceid, [], [], samplingRate,1);
                     PsychPortAudio('FillBuffer', letters_pahandle{l}, data');
                     pause(0.5); 
                     PsychPortAudio('Start', letters_pahandle{l});
@@ -148,7 +146,7 @@ if kk>= 1 && kk<=38
                 [mouseX, mouseY, buttons] = GetMouse(win);
             end
         end
-    if countClick == 250 
+    if countClick == 250 %%% I had to add this so that code would stop at some point. Check if this is still necessary. 
         keepRunning = false;
 
     end
