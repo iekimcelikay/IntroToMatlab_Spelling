@@ -24,7 +24,10 @@ letters_sound_path = fullfile('C:\Users\iekim\Documents\College\UniTrento_CimEC\
 words =  {'ant','axe','banana','bat','belt','brush','canary','cape','cat','cherry','dog','dress','duck','eagle','fox','goat','goose','hat','jacket','kiwi','koala','ladder','lemon','lion','mole','peach','pencil','penguin','pig','pumpkin','rabbit','sheep','shirt','skunk','swan','tiger','tomato','zebra'};
 
 my_devices = PsychPortAudio('GetDevices',[],[]);
-deviceid= 3; %please set your speaker. 1 for computer speaker, 2 for cable earphone, 3 for bluetooth earphone
+my_devices.DeviceIndex
+
+
+deviceid= 2; %please set your speaker. For my computer: 4 for computer speaker, 3 for bluetooth speake when blutetooth is connected. When it is not connected computer speaker is 2.
 InitializePsychSound(1);
 
 
@@ -43,7 +46,7 @@ KbName('UnifyKeyNames');
 % mainmenu(win)
 
 
-kk=1;
+kk=1; 
      studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid,kk);
 %
 

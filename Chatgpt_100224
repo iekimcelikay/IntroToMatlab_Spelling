@@ -1,0 +1,211 @@
+% Initialize Psychtoolbox
+PsychDefaultSetup(2);
+Screen('Preference', 'SkipSyncTests', 1); % Skip sync tests for faster execution
+Screen('Preference', 'SuppressAllWarnings', 1); % Suppress PTB warnings
+Screen('Preference', 'VisualDebugLevel', 0); % Suppress PTB startup info
+screenNumber = max(Screen('Screens'));
+
+% Open window
+[window, windowRect] = PsychImaging('OpenWindow', screenNumber, [255 255 255]);
+[screenXpixels, screenYpixels] = Screen('WindowSize', window);
+
+%% Notes for both Mono++ and Color++ mode:
+%
+% In Mono++ and Color++ mode, PTB expects color values in the range 0.0 to
+% 1.0 instead of the (otherwise usual) range 0 to 255. The range 0.0-1.0
+% is a more natural fit for high dynamic range/precision output devices than
+% the 0-255 range with its strong ties to 8 bpc output devices. 0-1 is also
+% the "natural" native color range of OpenGL, so colors in this range can
+% be handled by the graphics hardware at a higher speed. You can change the
+% mapping of input colors to output intensities by use of the command
+% Screen('ColorRange') (see its online help for usage), but in the interest
+% of uniform code and to avoid possible side effects with some graphics
+% hardware, we strongly recommend using the default 0.0-1.0 color range.
+%
+% You can still pass standard 8bpc (256 color/intensity levels) color/luminance
+% textures to PTB via standard use of Screen('MakeTexture') - the hardware
+% will convert such 8bpc images to OpenGL's native color range, as well as
+% any images delivered by the Quicktime movie playback engine or the video
+% capture engine. If you want to provide high dynamic range, high color
+% depths images, please specify them as Matlab double matrices to
+% Screen('MakeTexture') and set the optional flag 'floatprecision' to 1 or
+% 2, i.e., hdrtex = Screen('MakeTexture', win, myHDRImage, [], [], 2);
+%
+% Define main menu options
+mainMenuOptions = {'Study Menu', 'Exercise Menu', 'Exit'};
+
+% Define submenu options
+studyMenuOptions = {'Option 1', 'Option 2', 'Back'};
+exerciseMenuOptions = {'Option A', 'Option B', 'Back'};
+
+% Set text properties
+textSize = 30;
+textFont = 'Arial';
+
+% Create a loop for menu interaction
+exitMenu = false;
+while ~exitMenu
+    % Display main menu
+    DrawFormattedText(window, 'Main Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+    for i = 1:numel(mainMenuOptions)
+        DrawFormattedText(window, mainMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+    end
+    Screen('Flip', window);
+    
+    % Get mouse input
+    [x, y, buttons] = GetMouse(window);
+    
+    % Check for button press
+    if any(buttons)
+        % Determine which option was clicked
+        selection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1)) ;
+        
+        % Handle selection
+        switch selection
+            case 1
+                % Study Menu
+                while true
+                    DrawFormattedText(window, 'Study Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+                    for i = 1:numel(studyMenuOptions)
+                        DrawFormattedText(window, studyMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+                    end
+                    Screen('Flip', window);
+                    
+                    [x, y, buttons] = GetMouse(window);
+                    if any(buttons)
+                        studySelection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1));
+                        if studySelection == 3
+                            break; % Go back to main menu
+                        end
+                        % Handle study menu option selection
+                        % Your code here
+                    end
+                end
+            case 2
+                % Exercise Menu
+                while true
+                    DrawFormattedText(window, 'Exercise Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+                    for i = 1:numel(exerciseMenuOptions)
+                        DrawFormattedText(window, exerciseMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+                    end
+                    Screen('Flip', window);
+                    
+                    [x, y, buttons] = GetMouse(window);
+                    if any(buttons)
+                        exerciseSelection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1));
+                        if exerciseSelection == 3
+                            break; % Go back to main menu
+                        end
+                        % Handle exercise menu option selection
+                        % Your code here
+                    end
+                end
+            case 3
+                % Exit
+                exitMenu = true;
+                break;
+        end
+    end
+end
+
+% Clean up
+sca;
+
+
+
+%%%% 
+
+% Initialize Psychtoolbox
+PsychDefaultSetup(2);
+Screen('Preference', 'SkipSyncTests', 1); % Skip sync tests for faster execution
+Screen('Preference', 'SuppressAllWarnings', 1); % Suppress PTB warnings
+Screen('Preference', 'VisualDebugLevel', 0); % Suppress PTB startup info
+
+% Open window
+screenNumber = max(Screen('Screens'));
+[window, windowRect] = PsychImaging('OpenWindow', screenNumber, [255 255 255]);
+[screenXpixels, screenYpixels] = Screen('WindowSize', window);
+
+% Define main menu options
+mainMenuOptions = {'Study Menu', 'Exercise Menu', 'Exit'};
+
+% Define submenu options
+studyMenuOptions = {'Option 1', 'Option 2', 'Back'};
+exerciseMenuOptions = {'Option A', 'Option B', 'Back'};
+
+% Set text properties
+textSize = 30;
+textFont = 'Arial';
+
+% Create a loop for menu interaction
+exitMenu = false;
+while ~exitMenu
+    % Display main menu
+    DrawFormattedText(window, 'Main Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+    for i = 1:numel(mainMenuOptions)
+        DrawFormattedText(window, mainMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+    end
+    Screen('Flip', window);
+    
+    % Get mouse input
+    [x, y, buttons] = GetMouse(window);
+    
+    % Check for button press
+    if any(buttons)
+        % Determine which option was clicked
+        selection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1)) ;
+        
+        % Handle selection
+        switch selection
+            case 1
+                % Study Menu
+                while true
+                    DrawFormattedText(window, 'Study Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+                    for i = 1:numel(studyMenuOptions)
+                        DrawFormattedText(window, studyMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+                    end
+                    Screen('Flip', window);
+                    
+                    [x, y, buttons] = GetMouse(window);
+                    if any(buttons)
+                        studySelection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1));
+                        if studySelection == 3
+                            break; % Go back to main menu
+                        elseif studySelection == 4
+                            break; % Exit study menu and return to main menu
+                        end
+                        % Handle study menu option selection
+                        % Your code here
+                    end
+                end
+            case 2
+                % Exercise Menu
+                while true
+                    DrawFormattedText(window, 'Exercise Menu', 'center', screenYpixels * 0.25, [0 0 0], [], [], [], 1.5);
+                    for i = 1:numel(exerciseMenuOptions)
+                        DrawFormattedText(window, exerciseMenuOptions{i}, 'center', screenYpixels * (0.5 + (i-1) * 0.1), [0 0 0], [], [], [], 1.5);
+                    end
+                    Screen('Flip', window);
+                    
+                    [x, y, buttons] = GetMouse(window);
+                    if any(buttons)
+                        exerciseSelection = ceil((y - screenYpixels * 0.5) / (screenYpixels * 0.1));
+                        if exerciseSelection == 3
+                            break; % Go back to main menu
+                        elseif exerciseSelection == 4
+                            break; % Exit exercise menu and return to main menu
+                        end
+                        % Handle exercise menu option selection
+                        % Your code here
+                    end
+                end
+            case 3
+                % Exit
+                exitMenu = true;
+                break;
+        end
+    end
+end
+
+% Clean up
+sca;
