@@ -18,8 +18,8 @@ function [] = studymenu(win,words,images_path,words_sound_path,letters_sound_pat
 
 %%%%%%%%%%%%%%%%%%%%%%%
 KbName('UnifyKeyNames');
-Screen('TextSize', win, 18);
-Screen('TextFont', win, 'Kristen ITC');
+Screen('TextSize', win, 24);
+Screen('TextFont', win, 'Montserrat');
 Screen('flip', win);
 
 x2=1280;

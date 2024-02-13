@@ -28,21 +28,27 @@
 %   - Added return keypress after the word is finished.
 %   - Added correct word & error message. 
 %   - After 3 errors, it skips to the next word. 
-%   - When k=38, the loop stops. 
+%   - When idx=38, the loop stops. 
 %
 % 13.02.2024:
 %------------
 %   - Backspace won't work. 
+%   - kk changed with idx. 
+%   - x2 y2 - rounding implemented. (So you don't need to enter the coordinates everytime.)
+%   - 38 changed with vocab_num = 38. So you can test it with less vocab words.
+%%   - REMOVE THE SESSION COUNTER TO MAIN CODE BECAUSE IT NEEDS TO BE RESETTED THERE. 
 %_________________________________________________________________________
 %% Todo: 
+%%   - REMOVE THE SESSION COUNTER TO MAIN CODE BECASUE IT NEEDS TO BE RESETTED THERE.
 %   - Exit button 
-%   [+] Return to main menu after all of the words are completed. (k == 38)
+%   [+] Return to main menu after all of the words are completed. (idx == 38 == vocab_num)
 %   - Display this session's accuracy results. ==> display_results.m 
 %   - Return to main menu (button)
-%   - Fix the paths when you have time. 
-
-% https://colorswall.com/palette/14961
-
+%   - Fix the paths when you have time.
+%   - If you have time, try out the echoword function that you asked.  
+%
+% https://colorswall.com/palette/14961 Color palette 
+%
 %% Design: 
 %  Write the word when you see the image.
 % 1. Randomly present the images 
@@ -50,7 +56,7 @@
 % 3. Show the input on the screen
 % 4. Check if the input is correct
 %.5. If correct, display 'correct' 
-%.6. If incorrect, display 'incorrect' and the right word. 
+%.6. If incorrect, display 'incorrect'. 
 % 7. Save correct and incorrect responses. 
 % 8. After every image is practiced, give the accuracy results. 
 %==============================================================
@@ -75,7 +81,7 @@ Screen('Preference', 'VisualDebugLevel', 0);
 Screen('Preference','SkipSyncTests',1);
 
 
-
+session = 0;  %% !!!! This counter should be moved to main menu because it needs to be resetted there. 
 %setting the screen
 
 % 1. Setup the main screen -- this part should be moved to main function later. 
@@ -99,7 +105,7 @@ Screen('flip', win);
 %             left, top, right, bottom
 image_rect = [520 100 740 340]; % Main image rectangle. Image to be shown in this. 
 box1 = [420 430 840 510]; % Answer Box 
-box2 = [420 350 840 400]; %Write the name of the object
+box2 = [420 350 840 400]; % Prompt text: Write the name of the object
 %box2 = ; % Exit button
 %box3 = ; % Return to menu button
 
@@ -108,11 +114,11 @@ box2 = [420 350 840 400]; %Write the name of the object
 % x1+x2 needs to be equal to 100. y1+y2 needs to be equal to 100. 
 % x2 - x1 will give you the full width of screen. So x2 will always be the bigger value. 
 % y2 - y1 will give you the full length of screen. So y2 will always be the bigger value. 
-message_rect = [435 200 845 600];  %%% 435, 200, 845, 600 [0+round(x_screen*0.34) 0+round(y_screen*0.25) round(x_screen*0.66) round(y_screen*0.75)
+message_rect =[0+round(x_screen*0.25) 0+round(y_screen*0.15) round(x_screen*0.75) round(y_screen*0.85)];
 
-vocab_no = 38;
-random_numbers = randperm(vocab_no); %%% For exercise items to be shown randomly. 
-no_of_errors =zeros(vocab_no,1);
+vocab_num = 38;
+random_numbers = randperm(vocab_num); %%% For exercise items to be shown randomly. 
+no_of_errors =zeros(vocab_num,1);
 
 
 idx =1;
@@ -130,6 +136,7 @@ Screen('flip', win);
 ListenChar(-1); % Enable or disable key presses in the editor or command window.
 typedWord=[];
 keepRunning = true;
+
 
 while keepRunning
     %%% Showing the image on screen
@@ -166,7 +173,7 @@ while keepRunning
             Str = [letters{l}]; % This is if you want  to add something in between
             if ~contains(typedWord, 'Return')
                 DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
-                position = position + [12 0 12 0];
+                position = position + [15 0 15 0];
                 Screen(win, 'Flip', [], 1);
             end
         end
@@ -181,7 +188,7 @@ while keepRunning
                 typedWord = [];
             else             
                 no_of_errors(random_numbers(idx))=no_of_errors(random_numbers(idx))+1;
-                no_of_try = 3 - no_of_errors(random_numbers(idx));
+                no_of_try = 5 - no_of_errors(random_numbers(idx));
                 text3 = sprintf('You made a mistake.\n\n Trials left: %d', no_of_try); 
 
                 Screen('FillRect', win, [176 99 121], message_rect);
@@ -196,14 +203,15 @@ while keepRunning
             end
         end  
     end
-    if idx > 38
-
+    if idx > vocab_num
+        session = session +1;
         Screen('FillRect', win, [4 124 172]);
         text = 'You finished this session. Press a key to exit this screen.';
         DrawFormattedText(win, text, 'center', 'center');
         Screen(win,'Flip');
 
         KbStrokeWait; 
+        %%% This is counter for the exercise sessions. 
         sca;
         %% Display Results of this section 
         %display_results;
