@@ -35,9 +35,9 @@ Screen('Preference', 'VisualDebugLevel', 0);
 Screen('Preference','SkipSyncTests',1);
 
 
-x_screen=1280;
-y_screen=800;
-size_of_main_window=[0 0 x_screen y_screen];
+x2=1280;
+y2=800;
+size_of_main_window=[0 0 x2 y2];
 bg_colour=[195 68 122];
 KbName('UnifyKeyNames');
 
@@ -46,8 +46,8 @@ KbName('UnifyKeyNames');
 % mainmenu(win)
 
 
-kk=1; 
-     studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid,kk);
+idx=1; 
+     studymenu(win,words,images_path,words_sound_path,letters_sound_path,deviceid,idx);
 %
 
 
