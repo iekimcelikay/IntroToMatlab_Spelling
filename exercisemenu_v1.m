@@ -114,9 +114,9 @@ box2 = [420 350 840 400]; % Prompt text: Write the name of the object
 % x1+x2 needs to be equal to 100. y1+y2 needs to be equal to 100. 
 % x2 - x1 will give you the full width of screen. So x2 will always be the bigger value. 
 % y2 - y1 will give you the full length of screen. So y2 will always be the bigger value. 
-message_rect =[0+round(x_screen*0.25) 0+round(y_screen*0.15) round(x_screen*0.75) round(y_screen*0.85)];
+message_rect =[0+round(x2*0.25) 0+round(y2*0.15) round(x2*0.75) round(y2*0.85)];
 
-vocab_num = 38;
+vocab_num = 10;
 random_numbers = randperm(vocab_num); %%% For exercise items to be shown randomly. 
 no_of_errors =zeros(vocab_num,1);
 
@@ -196,7 +196,7 @@ while keepRunning
                 Screen('Flip',win);
                 pause(1.5);
                 typedWord = [];
-                if no_of_errors(random_numbers(idx)) == 3 %%% no of errors actually gives me an index. 
+                if no_of_errors(random_numbers(idx)) == 5 %%% no of errors actually gives me an index. 
                     idx = idx+1; 
                 end 
 
@@ -209,10 +209,9 @@ while keepRunning
         text = 'You finished this session. Press a key to exit this screen.';
         DrawFormattedText(win, text, 'center', 'center');
         Screen(win,'Flip');
-
-        KbStrokeWait; 
-        %%% This is counter for the exercise sessions. 
+        KbStrokeWait;
         sca;
+        break % This finally fixed the final error message. 
         %% Display Results of this section 
         %display_results;
     end
