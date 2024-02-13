@@ -1,6 +1,7 @@
 
-% EXERCISE MENU
-%_--------------
+%% EXERCISE MENU
+% mainmenu: -> 'box3: exercise' clicked -> exercise menu. 
+%================================================================
 %---------------------------------------------------------------
 %|                                                              |
 %|                 ______________________                       |
@@ -20,37 +21,41 @@
 %|                                                              |
 %|  EXIT                                    return to main menu | 
 %|______________________________________________________________|
-
-%% Updates:
+%================================================================
+%% Updates: 
 % 10.02.2024: 
+%------------
 %   - Added return keypress after the word is finished.
 %   - Added correct word & error message. 
 %   - After 3 errors, it skips to the next word. 
 %   - When k=38, the loop stops. 
+%
+% 13.02.2024:
+%------------
+%   - Backspace won't work. 
+%_________________________________________________________________________
 %% Todo: 
 %   - Exit button 
-%   - Return to main menu after all of the words are completed. (k == 38)
+%   + Return to main menu after all of the words are completed. (k == 38)
 %   - Display this session's accuracy results. 
 %   - Return to main menu (button)
 %   - 
 % https://colorswall.com/palette/14961
+
+%% Design: 
 %  Write the word when you see the image.
 % 1. Randomly present the images 
 % 2. Ask input from the user 
 % 3. Show the input on the screen
 % 4. Check if the input is correct
-%. 5. If correct, display 'correct' 
-%. 6. If incorrect, display 'incorrect' and the right word. 
+%.5. If correct, display 'correct' 
+%.6. If incorrect, display 'incorrect' and the right word. 
 % 7. Save correct and incorrect responses. 
 % 8. After every image is practiced, give the accuracy results. 
-
-
-% If box3 in mainmenu is clicked - EXERCISE
-%% 1. Randomly present the images
-
-
-
+%==============================================================
 %%%%
+%% CODE STARTS HERE
+%---------------------
 clear all;
 close all;
 images_path = fullfile('C:\Users\iekim\Documents\College\UniTrento_CimEC\Fall_2022_23\IntroductiontoComputerProgramming_Matlab_FAIRHALL\MATLAB\final_demo/images/');
@@ -96,6 +101,12 @@ box1 = [420 430 840 510]; % Answer Box
 box2 = [420 350 840 400]; %Write the name of the object
 %box2 = ; % Exit button
 %box3 = ; % Return to menu button
+
+% You can actually use percentages to calculate the coordinates. 
+% [x1 y1 x2 y2] = [left, top, right, bottom] = 
+% x1+x2 needs to be equal to 100. y1+y2 needs to be equal to 100. 
+% x2 - x1 will give you the full width of screen. 
+% y2 - y1 will give you the full length of screen. 
 message_rect = [435 200 845 600];  %%% 435, 200, 845, 600 [0+round(x_screen*0.34) 0+round(y_screen*0.25) round(x_screen*0.66) round(y_screen*0.75)
 
 vocab_no = 38;
