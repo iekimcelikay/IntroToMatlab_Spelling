@@ -36,10 +36,11 @@
 %_________________________________________________________________________
 %% Todo: 
 %   - Exit button 
-%   + Return to main menu after all of the words are completed. (k == 38)
-%   - Display this session's accuracy results. 
+%   [+] Return to main menu after all of the words are completed. (k == 38)
+%   - Display this session's accuracy results. ==> display_results.m 
 %   - Return to main menu (button)
-%   - 
+%   - Fix the paths when you have time. 
+
 % https://colorswall.com/palette/14961
 
 %% Design: 
@@ -78,10 +79,10 @@ Screen('Preference','SkipSyncTests',1);
 %setting the screen
 
 % 1. Setup the main screen -- this part should be moved to main function later. 
-
-x_screen=1280;
-y_screen=800;
-size_of_main_window=[0 0 x_screen y_screen];
+% x1= 0 y1= 0 for the main screen. 
+x2=1280;
+y2=800;
+size_of_main_window=[0 0 x2 y2];
 bg_color=[99 159 176];
 
 [win, mainScreen]=Screen('OpenWindow', 0, bg_color, size_of_main_window);
@@ -105,8 +106,8 @@ box2 = [420 350 840 400]; %Write the name of the object
 % You can actually use percentages to calculate the coordinates. 
 % [x1 y1 x2 y2] = [left, top, right, bottom] = 
 % x1+x2 needs to be equal to 100. y1+y2 needs to be equal to 100. 
-% x2 - x1 will give you the full width of screen. 
-% y2 - y1 will give you the full length of screen. 
+% x2 - x1 will give you the full width of screen. So x2 will always be the bigger value. 
+% y2 - y1 will give you the full length of screen. So y2 will always be the bigger value. 
 message_rect = [435 200 845 600];  %%% 435, 200, 845, 600 [0+round(x_screen*0.34) 0+round(y_screen*0.25) round(x_screen*0.66) round(y_screen*0.75)
 
 vocab_no = 38;
@@ -114,7 +115,7 @@ random_numbers = randperm(vocab_no); %%% For exercise items to be shown randomly
 no_of_errors =zeros(vocab_no,1);
 
 
-kk =1;
+idx =1;
 
 %% Text messages:
 text1 = 'Type the correct vocabulary for this image, press enter after your answer. ';
@@ -132,7 +133,7 @@ keepRunning = true;
 
 while keepRunning
     %%% Showing the image on screen
-    filename = fullfile([images_path, words{random_numbers(kk)}, '.jpg']);
+    filename = fullfile([images_path, words{random_numbers(idx)}, '.jpg']);
     myImage = imread(filename);
     tex=Screen('MakeTexture', win, myImage);
     Screen('DrawTexture', win, tex, [], image_rect);
@@ -143,7 +144,7 @@ while keepRunning
     %%% Collecting the user input 
 
     %%% Check against: (The word that is shown:)
-    correctWord = words{random_numbers(kk)}; 
+    correctWord = words{random_numbers(idx)}; 
 
     [keyTime, keyCode] = KbStrokeWait;
     keyPressed = KbName(keyCode);
@@ -176,11 +177,11 @@ while keepRunning
                 DrawFormattedText(win, text2, 'center', 'center');
                 Screen('Flip',win);
                 pause(1.5);
-                kk=kk+1;
+                idx=idx+1;
                 typedWord = [];
             else             
-                no_of_errors(random_numbers(kk))=no_of_errors(random_numbers(kk))+1;
-                no_of_try = 3 - no_of_errors(random_numbers(kk));
+                no_of_errors(random_numbers(idx))=no_of_errors(random_numbers(idx))+1;
+                no_of_try = 3 - no_of_errors(random_numbers(idx));
                 text3 = sprintf('You made a mistake.\n\n Trials left: %d', no_of_try); 
 
                 Screen('FillRect', win, [176 99 121], message_rect);
@@ -188,14 +189,14 @@ while keepRunning
                 Screen('Flip',win);
                 pause(1.5);
                 typedWord = [];
-                if no_of_errors(random_numbers(kk)) == 3 %%% no of errors actually gives me an index. 
-                    kk = kk+1; 
+                if no_of_errors(random_numbers(idx)) == 3 %%% no of errors actually gives me an index. 
+                    idx = idx+1; 
                 end 
 
             end
         end  
     end
-    if kk > 38
+    if idx > 38
 
         Screen('FillRect', win, [4 124 172]);
         text = 'You finished this session. Press a key to exit this screen.';
