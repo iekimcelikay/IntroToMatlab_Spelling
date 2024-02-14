@@ -84,7 +84,7 @@ Screen('Preference','SkipSyncTests',1);
 session = 0;  %% !!!! This counter should be moved to main menu because it needs to be resetted there. 
 %setting the screen
 
-% 1. Setup the main screen -- this part should be moved to main function later. 
+%% 1. Setup the main screen -- this part should be moved to main function later. 
 % x1= 0 y1= 0 for the main screen. 
 x2=1280;
 y2=800;
@@ -92,8 +92,6 @@ size_of_main_window=[0 0 x2 y2];
 bg_color=[99 159 176];
 
 [win, mainScreen]=Screen('OpenWindow', 0, bg_color, size_of_main_window);
-
-%% PAGE DESIGN 
 
 KbName('UnifyKeyNames');
 Screen('TextSize', win, 24);
@@ -108,6 +106,7 @@ box1 = [420 430 840 510]; % Answer Box
 box2 = [420 350 840 400]; % Prompt text: Write the name of the object
 %box2 = ; % Exit button
 %box3 = ; % Return to menu button
+box4 = [0+round(x2*0.10) 0+round(y2*0.10) round(x2*0.90) round(y2*0.90)]; % to display the errrors. 
 
 % You can actually use percentages to calculate the coordinates. 
 % [x1 y1 x2 y2] = [left, top, right, bottom] = 
@@ -116,27 +115,22 @@ box2 = [420 350 840 400]; % Prompt text: Write the name of the object
 % y2 - y1 will give you the full length of screen. So y2 will always be the bigger value. 
 message_rect =[0+round(x2*0.25) 0+round(y2*0.15) round(x2*0.75) round(y2*0.85)];
 
-vocab_num = 10;
+%Variables & Arrays needed: 
+vocab_num = 5;
 random_numbers = randperm(vocab_num); %%% For exercise items to be shown randomly. 
 no_of_errors =zeros(vocab_num,1);
-
-
 idx =1;
+words_presented={}; 
+typedWord=[];
 
-%% Text messages:
+% Text messages:
 text1 = 'Type the correct vocabulary for this image, press enter after your answer. ';
 text2 = 'Correct!';
   
+%%
+%ListenChar(-1); % Enable or disable key presses in the editor or command window.
 
-
- 
-Screen('flip', win);
-
-
-ListenChar(-1); % Enable or disable key presses in the editor or command window.
-typedWord=[];
 keepRunning = true;
-
 
 while keepRunning
     %%% Showing the image on screen
@@ -152,7 +146,7 @@ while keepRunning
 
     %%% Check against: (The word that is shown:)
     correctWord = words{random_numbers(idx)}; 
-
+    words_presented{random_numbers(idx)} = correctWord;
     [keyTime, keyCode] = KbStrokeWait;
     keyPressed = KbName(keyCode);
     if strcmpi(keyPressed, 'ESCAPE')
@@ -206,18 +200,33 @@ while keepRunning
     if idx > vocab_num
         session = session +1;
         Screen('FillRect', win, [4 124 172]);
-        text = 'You finished this session. Press a key to exit this screen.';
+        text = 'You finished this session. Press a key to exit and see your errors in this session.';
         DrawFormattedText(win, text, 'center', 'center');
         Screen(win,'Flip');
         KbStrokeWait;
-        sca;
+        disp('breaking at ')
+        Screen(win, 'Flip', [], 1)
         break % This finally fixed the final error message. 
-        %% Display Results of this section 
-        %display_results;
     end
 end  
 
-%ListenChar(0);
+Screen('FillRect', win, [4 124 172]);
+A = no_of_errors;
+vocab_errors_array = words_presented(all(A,2)); % Cell array of wronged words. 
+num_errors = size(words_presented(all(A,2)),2); % that number of errored words for that session 
+pos = box4;
+title_pos = box4 - [0 30 0 30];
+for idx_word = 1:num_errors
+    error_vocab = vocab_errors_array{idx_word};
+    %Str = convertCharsToStrings(error_vocab);
+    results_text = sprintf('Errors in this session: \n\n');
+    DrawFormattedText(win, results_text, 'center', 'center', [0 0 0], [], [], [],[],[], title_pos);
+    DrawFormattedText(win, error_vocab, 'center', 'center', [0 0 0], [], [], [],[],[], pos);
+    pos = pos + [0 30 0 30];
+    Screen(win, 'Flip', [], 1);
+end
+
+        
 
 
 
