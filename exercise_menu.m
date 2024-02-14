@@ -1,4 +1,4 @@
-
+function [num_sessions, no_of_errors, scores] = exercise_menu(win, words, main_dir,session,idx)
 %% EXERCISE MENU
 % mainmenu: -> 'box3: exercise' clicked -> exercise menu. 
 %================================================================
@@ -63,6 +63,7 @@
 %%%%
 %% CODE STARTS HERE
 %---------------------
+
 clear all;
 close all;
 images_path = fullfile('C:\Users\iekim\Documents\College\UniTrento_CimEC\Fall_2022_23\IntroductiontoComputerProgramming_Matlab_FAIRHALL\MATLAB\final_demo/images/');
@@ -72,11 +73,14 @@ main_dir = fullfile('C:\Users\iekim\Documents\College\UniTrento_CimEC\Fall_2022_
 %words list
 words =  {'ant','axe','banana','bat','belt','brush','canary','cape','cat','cherry','dog','dress','duck','eagle','fox','goat','goose','hat','jacket','kiwi','koala','ladder','lemon','lion','mole','peach','pencil','penguin','pig','pumpkin','rabbit','sheep','shirt','skunk','swan','tiger','tomato','zebra'};
 
+%my_devices = PsychPortAudio('GetDevices',[],[]);
+%deviceid= 2; %please set your speaker. 2 for computer if bluetooth is not connected.
+%InitializePsychSound(1);
+
+
 Screen('Preference', 'VisualDebugLevel', 0);
 Screen('Preference','SkipSyncTests',1);
 
-
-session = 0;  %% !!!! This counter should be moved to main menu because it needs to be resetted there. 
 %setting the screen
 
 %% 1. Setup the main screen -- this part should be moved to main function later. 
@@ -125,8 +129,11 @@ text2 = 'Correct!';
 %%
 %ListenChar(-1); % Enable or disable key presses in the editor or command window.
 
-keepRunning = true;
-
+if idx<= vocab_num
+    keepRunning = true;
+else
+    keepRunning= false;
+end
 
 while keepRunning
     %%% Showing the image on screen
@@ -193,7 +200,7 @@ while keepRunning
             end
         end  
     end
-    if idx == vocab_num
+    if idx > vocab_num
         session = session +1;
         Screen('FillRect', win, [4 124 172]);
         text = 'You finished this session. Press a key to exit and see your errors in this session.';
@@ -221,7 +228,10 @@ for idx_word = 1:num_errors
     pos = pos + [0 30 0 30];
     Screen(win, 'Flip', [], 1);
 end  
+num_sessions = session;
+scores{:,num_sessions} = no_of_errors;
 
+errors_array = generate_test_arrays(38);
 
 
 
