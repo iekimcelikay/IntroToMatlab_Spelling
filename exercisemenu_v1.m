@@ -207,7 +207,7 @@ while keepRunning
         disp('breaking at ')
         Screen(win, 'Flip', [], 1)
         break % This finally fixed the final error message. 
-    end
+        end
 end  
 
 Screen('FillRect', win, [4 124 172]);
@@ -224,9 +224,9 @@ for idx_word = 1:num_errors
     DrawFormattedText(win, error_vocab, 'center', 'center', [0 0 0], [], [], [],[],[], pos);
     pos = pos + [0 30 0 30];
     Screen(win, 'Flip', [], 1);
-end
+end  
 
-        
+
 
 
 
