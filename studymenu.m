@@ -12,13 +12,16 @@ function [] = studymenu(win,words,images_path,words_sound_path,letters_sound_pat
 % INSTRUCTIONS
 % Right and Left arrow keys are used for navigating between the 38 words.
 % There needs to be 2 keypresses. If you press the right arrow keys 2
-% times, you will go to the next word's page. 
-% If you press ESC key, (2 times), you will quit the PTB window. 
+% times, you will go to the next word's page.
+% If you press ESC key, (2 times), you will quit the PTB window.
+
+%%% If ESC is pressed then you should return to the main menu. How to solve
+%%% this?
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
 KbName('UnifyKeyNames');
-Screen('TextSize', win, 24);
+Screen('TextSize', win, 18);
 Screen('TextFont', win, 'Montserrat');
 Screen('flip', win);
 
@@ -40,33 +43,36 @@ box2 = 'Listen the word';
 box3 = 'see the spelling';
 box4 = 'listen the spelling';
 
-keepRunning=true;
-noClickYet = true;
+keepRunning = true; 
+
 countClick = 0;
+Screen('FillRect', win, [99 159 176]);
+Screen('flip', win);
 
 if idx>= 1 && idx<=38
     while keepRunning
         [keyIsDown, ~, keyCode] = KbCheck;
         if keyIsDown
-          [secs, keyCode] = KbStrokeWait;
+            [secs,   keyCode] = KbStrokeWait;
+            keyPressed = KbName(keyCode);
             % Check if the 'Escape' key is pressed
-            if keyCode(KbName('ESCAPE'))
+            if strcmp(keyPressed, 'ESCAPE')
                 disp('Escape key pressed. Exiting the screen.');
                 keepRunning = false;  % Set the flag to exit the loop
                 pause(0.5)
-                sca;
-                return
-            elseif keyCode(KbName('LeftArrow'))
+                %%% How to go back to the main menu?
+                break
+            elseif strcmp(keyPressed, 'LeftArrow')
                 Screen(win,'flip')
                 idx = idx -1;
                 continue
-            elseif keyCode(KbName('RightArrow'))
+            elseif strcmp(keyPressed, 'RightArrow')
                 Screen(win,'flip')
                 idx = idx+1;
                 continue
             end
-        end
-        [mouseX, mouseY, buttons] = GetMouse;  %%% while keepRunning = true this will run. 
+    end
+    [mouseX, mouseY, buttons] = GetMouse;  
 
     % Show the main image on the screen.
     filename=fullfile([images_path, words{idx}, '.jpg']);
@@ -85,70 +91,70 @@ if idx>= 1 && idx<=38
     DrawFormattedText(win, box3, 'center' , 'center',[0 0 0], [], [], [], [], [], rect3);
     DrawFormattedText(win, box4, 'center' , 'center',[0 0 0], [], [], [], [], [], rect4);
 
-     Screen(win, 'Flip', [], 1);
-        if buttons(1) ==1
-            % Button 1: See the word
-            if mouseX > rect1(1) & mouseX<rect1(3) & mouseY>rect1(2) & mouseY<rect1(4)
-                newStr = upper(words{idx});
-                DrawFormattedText(win, newStr, 'center' , 'center',[0 0 0], [], [], [], [], [], rect1+[0 50 0 50]);
-                Screen(win, 'Flip', [], 1);
-                countClick = countClick + 1;
-                    
+    Screen(win, 'Flip', [], 1);
+
+    if buttons(1) ==1
+        % Button 1: See the word
+        if mouseX > rect1(1) & mouseX<rect1(3) & mouseY>rect1(2) & mouseY<rect1(4)
+            newStr = upper(words{idx});
+            DrawFormattedText(win, newStr, 'center' , 'center',[0 0 0], [], [], [], [], [], rect1+[0 50 0 50]);
+            Screen(win, 'Flip', [], 1);
+            countClick = countClick + 1;
+
 
             % Button 2: Listen the word
-            elseif mouseX > rect2(1) & mouseX<rect2(3) & mouseY>rect2(2) & mouseY<rect2(4)
-                % Loading the audio for word
-                audio_file = fullfile([words_sound_path, words{idx}, '.wav']);
-                [data, samplingRate]=audioread(audio_file);
-                pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate, 1);
-                PsychPortAudio('FillBuffer', pahandle, data');
-                pause(0.5); 
-                PsychPortAudio('Start', pahandle);
-                countClick = countClick + 1;
+        elseif mouseX > rect2(1) & mouseX<rect2(3) & mouseY>rect2(2) & mouseY<rect2(4)
+            % Loading the audio for word
+            audio_file = fullfile([words_sound_path, words{idx}, '.wav']);
+            [data, samplingRate]=audioread(audio_file);
+            pahandle = PsychPortAudio('Open', deviceid, [], [], samplingRate, 1);
+            PsychPortAudio('FillBuffer', pahandle, data');
+            pause(0.5);
+            PsychPortAudio('Start', pahandle);
+            countClick = countClick + 1;
 
             % Button 3: See the spelling
-            elseif  mouseX > rect3(1) & mouseX<rect3(3) & mouseY>rect3(2) & mouseY<rect3(4)
-                newStr = upper(words{idx});
-                letters = {};
-                position = rect3 + [0 50 0 50];
-                for l=1:numel(newStr)
-                    letter = newStr(l);
-                    % Append the letter to this array.
-                    letters(l) = {letter};
-                    % Draw the formatted text
-                    Str = [letters{l} , '- '];
-                    DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
-                    % Update the vertical position for the next string
-                    position = position + [50 0 50 0];
-                    Screen(win, 'Flip', [], 1);
-                end
+        elseif  mouseX > rect3(1) & mouseX<rect3(3) & mouseY>rect3(2) & mouseY<rect3(4)
+            newStr = upper(words{idx});
+            letters = {};
+            position = rect3 + [0 50 0 50];
+            for l=1:numel(newStr)
+                letter = newStr(l);
+                % Append the letter to this array.
+                letters(l) = {letter};
+                % Draw the formatted text
+                Str = [letters{l} , '- '];
+                DrawFormattedText(win, Str, 'center', 'center', [0 0 0], [], [], [],[],[], position);
+                % Update the vertical position for the next string
+                position = position + [50 0 50 0];
+                Screen(win, 'Flip', [], 1);
+            end
 
 
             %Button 4: Listen the spelling
-            elseif mouseX > rect4(1) & mouseX<rect4(3) & mouseY>rect4(2) & mouseY<rect4(4)
-                % Loading the audio for letters (spelling listening)
-                newStr = upper(words{idx});
-                letters = {};
-                for l=1:numel(newStr)
-                    letter = newStr(l);
-                    % Append the letter to this array.
-                    letters(l) = {letter};
-                    letter_audio = fullfile([letters_sound_path, letters{l}, '.wav']);
-                    [data, samplingRate]=audioread(letter_audio);
-                    letters_pahandle{l} = PsychPortAudio('Open', deviceid, [], [], samplingRate,1);
-                    PsychPortAudio('FillBuffer', letters_pahandle{l}, data');
-                    pause(0.5); 
-                    PsychPortAudio('Start', letters_pahandle{l});
-                end
+        elseif mouseX > rect4(1) & mouseX<rect4(3) & mouseY>rect4(2) & mouseY<rect4(4)
+            % Loading the audio for letters (spelling listening)
+            newStr = upper(words{idx});
+            letters = {};
+            for l=1:numel(newStr)
+                letter = newStr(l);
+                % Append the letter to this array.
+                letters(l) = {letter};
+                letter_audio = fullfile([letters_sound_path, letters{l}, '.wav']);
+                [data, samplingRate]=audioread(letter_audio);
+                letters_pahandle{l} = PsychPortAudio('Open', deviceid, [], [], samplingRate,1);
+                PsychPortAudio('FillBuffer', letters_pahandle{l}, data');
+                pause(0.5);
+                PsychPortAudio('Start', letters_pahandle{l});
+            end
 
-            end
-            while buttons(1)==1
-                [mouseX, mouseY, buttons] = GetMouse(win);
-            end
         end
-    if countClick == 250 %%% I had to add this so that code would stop at some point. Check if this is still necessary. 
-        keepRunning = false;
-
-    end
+        while buttons(1)==1
+            [mouseX, mouseY, buttons] = GetMouse(win);
+        end
+        if countClick == 250 %%% I had to add this so that code would stop at some point. Check if this is still necessary. 
+            keepRunning = false;
+    
+        end
     end
 end
