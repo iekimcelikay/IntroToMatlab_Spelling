@@ -1,5 +1,5 @@
 
-function [] = studymenu(win,words,main_dir,images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
+function [] = studymenu(x2,y2,win,words,main_dir,images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
     
 % Rectangle 1: See the word
 % Rectangle 2: Listen the word

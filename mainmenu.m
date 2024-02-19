@@ -104,7 +104,7 @@ function mainmenu(win,x2, y2, words, main_dir,images_path,words_sound_path,lette
                     'When you reach the last word, you can press ESC to return to the main menu.\n\n' ...
                     'Press any key to continue. '], win)
                 KbWait([], 3);
-                studymenu(win,words,main_dir, images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
+                studymenu(x2,y2,win,words,main_dir, images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
     
             case 'Exercise Menu'
                 % Open window

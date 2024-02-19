@@ -197,10 +197,10 @@ selection = strings;
             pause(1)
             PTBdisplaytext(['To change between words you need to use arrow keys. \n ' ...
                 '\n Keys must be pressed twice.' ...
-                'When you reach the last word, you can press ESC to return to the main menu.\n\n'
+                'When you reach the last word, you can press ESC to return to the main menu.\n\n'...
                 'Press any key to continue. '], win)
             KbWait([], 3);
-            studymenu(win,words,main_dir, images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
+            studymenu(x2,y2,win,words,main_dir, images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
 
         case 'Exercise Menu'
             % Open window
@@ -235,7 +235,7 @@ selection = strings;
 end
 
 %% 2. STUDY MENU
-function [] = studymenu(win,words,main_dir,images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
+function [] = studymenu(x2,y2,win,words,main_dir,images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
     cd(main_dir);
     
 
