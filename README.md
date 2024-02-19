@@ -1,6 +1,9 @@
 # IntroToMatlab_Spelling
 ilkimekim.celikay@studenti.unitn.it
 
+- SET UP ROOT DIRECTORY!!
+- SET UP DEVICE ID!!
+- session_counter.txt is REQUIRED
 
 - Run through RUNcode.m
 - Function files are in the directory if local functions don't work
