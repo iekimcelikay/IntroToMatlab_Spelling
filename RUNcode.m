@@ -72,13 +72,12 @@ Screen('TextSize', win, 18);
 Screen('TextFont', win, 'Helvetica');
 
 
-welcome_text = ['Welcome to spelling for English! /n Press enter to continue to main menu.'];
+welcome_text = ['Welcome to spelling for English! \n Press enter to continue to main menu.'];
 
 % 1. Opening Screen: Show welcome text, open mainmenu if enter is pressed. 
 
 while true
-     DrawFormattedText(win, welcome_text, 'center', 'center');
-     Screen('Flip', win);
+     PTBdisplaytext(welcome_text, win);
      
      [~, keyCode]= KbStrokeWait;
      key_pressed=KbName(keyCode);
@@ -198,7 +197,7 @@ selection = strings;
             pause(1)
             PTBdisplaytext(['To change between words you need to use arrow keys. \n ' ...
                 '\n Keys must be pressed twice.' ...
-                'When you reach the last word, you can press ESC to return to the main menu.\n\n' ...
+                'When you reach the last word, you can press ESC to return to the main menu.\n\n'
                 'Press any key to continue. '], win)
             KbWait([], 3);
             studymenu(win,words,main_dir, images_path,words_sound_path,letters_sound_path,session, deviceid, table_fname, idx)
@@ -208,7 +207,8 @@ selection = strings;
             PTBdisplaytext('Opening the exercise menu', win);
             pause(1)
             PTBdisplaytext([...
-                'Press any key to continue. \n \n Pressing ESC will abruptly quit and will not save your progress.'], win)
+                'Press any key to continue. \n \n Pressing ESC will abruptly quit and will not save your progress.\n\n'...
+                'Space and Backspace will create an error.\n \n'], win)
             KbWait([], 3);
             [num_sessions, no_of_errors, scores] = exercise_menu(x2, y2, win, words, main_dir, images_path,words_sound_path,letters_sound_path, session,deviceid, idx, table_fname);
             count = num_sessions;
@@ -549,6 +549,8 @@ cd(main_dir);
                 disp('before return statement - return to main menu still'); %%% This only gets executed after pressing exit on main menu.
                 return
             end
+          else
+               continue
         end
     end
 end
