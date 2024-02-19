@@ -221,6 +221,8 @@ cd(main_dir);
                 disp('before return statement - return to main menu still'); %%% This only gets executed after pressing exit on main menu.
                 return
             end
+        else
+            continue
         end
     end
 end
