@@ -18,7 +18,7 @@ letters_sound_path = fullfile(rootdir, [maindir_name, letters_sound_pathname]);
 
 %words list
 words =  {'ant','axe','banana','bat','belt','brush','canary','cape','cat','cherry','dog','dress','duck','eagle','fox','goat','goose','hat','jacket','kiwi','koala','ladder','lemon','lion','mole','peach','pencil','penguin','pig','pumpkin','rabbit','sheep','shirt','skunk','swan','tiger','tomato','zebra'};
-words = {'ant','axe','banana'};
+
 InitializePsychSound(1);
 deviceid = 2; 
 
@@ -208,7 +208,7 @@ selection = strings;
             pause(1)
             PTBdisplaytext([...
                 'Press any key to continue. \n \n Pressing ESC will abruptly quit and will not save your progress.\n\n'...
-                'Space and Backspace will create an error.\n \n'], win)
+                'Space and Backspace does not work.\n \n'], win)
             KbWait([], 3);
             [num_sessions, no_of_errors, scores] = exercise_menu(x2, y2, win, words, main_dir, images_path,words_sound_path,letters_sound_path, session,deviceid, idx, table_fname);
             count = num_sessions;
