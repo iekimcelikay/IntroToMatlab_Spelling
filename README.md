@@ -1,6 +1,12 @@
 # IntroToMatlab_Spelling
-ilkimekim.celikay@studenti.unitn.it
 
+DESCRIPTION UPDATE (January 2025): 
+- This was my final project for the "Introduction to Matlab" course offered in 2023, at CIMeC, Trento, as part of the master's program "Cognitive Science" which I have completed and received the MSC. degree in December 2024.
+
+Written in MATLAB2023b, implemented via  Psychtoolbox 3.0.19. 
+______________________________________________________________________________________________________________________________
+
+## README:
 - SET UP ROOT DIRECTORY!!
 - SET UP DEVICE ID!!
 - session_counter.txt is REQUIRED
