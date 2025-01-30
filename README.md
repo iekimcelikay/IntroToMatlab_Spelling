@@ -3,10 +3,10 @@
 DESCRIPTION UPDATE (January 2025): 
 - This was my final project for the "Introduction to Matlab" course offered in 2023, at CIMeC, Trento, as part of the master's program "Cognitive Science" which I have completed and received the MSC. degree in December 2024.
 
-Written in MATLAB2023b, implemented via  Psychtoolbox 3.0.18__*__. 
+Written in MATLAB2023b, implemented via  Psychtoolbox 3.0.18*. 
 Project last updated and submitted on February 2024. 
 
-__*__ _this information might not be entirely correct, as it depends on my memory._
+_*this information might not be entirely correct, as it depends on my memory._
 ______________________________________________________________________________________________________________________________
 
 ## README:
